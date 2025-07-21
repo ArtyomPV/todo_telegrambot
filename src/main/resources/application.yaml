@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: to_do_telegrambot
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/todo_db
+    username: arty
+    password: arty
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    properties:
+      hibernate:
+        format-ddl: true
+    hibernate:
+      ddl-auto: create
+    show-sql: true
