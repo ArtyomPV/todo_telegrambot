@@ -11,6 +11,10 @@ spring:
     properties:
       hibernate:
         format-ddl: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: create
     show-sql: true
+
+server:
+  port: 8087
