@@ -1,0 +1,12 @@
+version: '3.9'
+
+services:
+  database:
+    container_name: postgres-TODO
+    image: 'postgres:latest'
+    environment:
+      POSTGRES_DB: todo_db
+      POSTGRES_USER: arty
+      POSTGRES_PASSWORD: arty
+    ports:
+      - '5447:5432'
