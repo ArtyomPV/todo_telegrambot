@@ -16,5 +16,8 @@ spring:
       ddl-auto: create
     show-sql: true
 
+bot:
+  botUsername: ${BOT_USERNAME}
+  botToken: ${BOT_TOKEN}
 server:
   port: 8087
