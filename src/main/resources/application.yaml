@@ -3,7 +3,7 @@ spring:
     name: to_do_telegrambot
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/todo_db
+    url: jdbc:postgresql://localhost:5447/todo_db
     username: arty
     password: arty
     driver-class-name: org.postgresql.Driver
