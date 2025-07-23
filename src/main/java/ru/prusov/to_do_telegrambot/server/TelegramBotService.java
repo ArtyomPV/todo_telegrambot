@@ -25,7 +25,6 @@ public class TelegramBotService implements SpringLongPollingBot, LongPollingSing
 
     @Override
     public void consume(Update update) {
-
     }
 
     @Override
