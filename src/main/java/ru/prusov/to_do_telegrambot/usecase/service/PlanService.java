@@ -1,6 +1,5 @@
 package ru.prusov.to_do_telegrambot.usecase.service;
 
-import jakarta.transaction.RollbackException;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -48,5 +47,10 @@ public class PlanService {
         Optional<Plan> plan = planRepository.findById(id);
         System.out.printf("Founded plan %s\n", plan.get());
         planRepository.delete(plan.get());
+    }
+
+    @Transactional
+    public long save(Plan plan) {
+        return planRepository.save(plan).getId();
     }
 }

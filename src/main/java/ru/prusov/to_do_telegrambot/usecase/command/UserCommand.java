@@ -9,7 +9,8 @@ public enum UserCommand {
     ADD("/add"),
     START("/start"),
     LIST("/list"),
-    REMOVE("/remove");
+    REMOVE("/remove"),
+    DONE("/done");
 
     private final String command;
 

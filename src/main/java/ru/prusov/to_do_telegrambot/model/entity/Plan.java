@@ -3,6 +3,7 @@ package ru.prusov.to_do_telegrambot.model.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import ru.prusov.to_do_telegrambot.usecase.state.PlanStatus;
 
 @Entity
 @Table(name = "plans")
@@ -16,8 +17,9 @@ public class Plan {
     @Column(length = 50)
     String title;
     String description;
-    @Enumerated(EnumType.STRING)
-    Status status;
+    @Enumerated(value = EnumType.STRING)
+    @Column(nullable = false)
+    PlanStatus status;
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     User user;
 
@@ -25,6 +27,6 @@ public class Plan {
         this.title = description.substring(0, Math.min(description.length(), 50));
         this.description = description;
         this.user = user;
-        this.status = Status.NEED_TODO;
+        this.status = PlanStatus.NEED_TODO;
     }
 }
