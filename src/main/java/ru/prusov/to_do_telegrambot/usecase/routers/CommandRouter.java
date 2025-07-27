@@ -16,9 +16,9 @@ import java.util.Optional;
 public class CommandRouter {
     Map<UserCommand, Command> handlerMap = new EnumMap<>(UserCommand.class);
 
-    public CommandRouter(List<Command> handlers){
-        handlers.forEach(h->{
-            handlerMap.put(h.command(),h);
+    public CommandRouter(List<Command> handlers) {
+        handlers.forEach(h -> {
+            handlerMap.put(h.command(), h);
         });
     }
 

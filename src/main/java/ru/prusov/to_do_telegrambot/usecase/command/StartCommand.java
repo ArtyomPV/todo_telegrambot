@@ -15,8 +15,8 @@ import ru.prusov.to_do_telegrambot.usecase.service.UserService;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class StartCommand implements Command {
-    TelegramClient telegramClient;
-    UserService userService;
+    final TelegramClient telegramClient;
+    final UserService userService;
 
     @Override
     public UserCommand command() {

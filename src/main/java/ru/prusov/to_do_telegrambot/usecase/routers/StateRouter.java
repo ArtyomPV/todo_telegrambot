@@ -17,13 +17,13 @@ import java.util.Optional;
 public class StateRouter {
     Map<UserState, State> handlerMap = new EnumMap<>(UserState.class);
 
-    public StateRouter(List<State> handlers){
+    public StateRouter(List<State> handlers) {
         handlers.forEach(h -> {
             handlerMap.put(h.state(), h);
         });
     }
 
-    public Optional<State> getHandler(UserState userState){
+    public Optional<State> getHandler(UserState userState) {
         return Optional.ofNullable(handlerMap.get(userState));
     }
 }

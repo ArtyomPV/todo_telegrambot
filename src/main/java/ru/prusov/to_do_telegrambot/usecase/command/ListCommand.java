@@ -15,8 +15,8 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class ListCommand implements Command {
-    TelegramClient telegramClient;
-    PlanService planService;
+    final TelegramClient telegramClient;
+    final PlanService planService;
 
     @Override
     public UserCommand command() {
@@ -26,31 +26,34 @@ public class ListCommand implements Command {
     @Override
     public void execute(CommonInfo commonInfo) {
         long chatId = commonInfo.getChatId();
-        List<Plan> plans = planService.getPlans(chatId);
+        try {
+            List<Plan> plans = planService.getPlans(chatId);
 
-        if (plans.isEmpty()) {
-            SendMessage nothingMessage = new SendMessage(
-                    commonInfo.getChatId().toString(),
-                    "У вас пока нет запланированных дел ✅"
-            );
-            return;
-        }
-        StringBuilder messageBuilder = new StringBuilder();
-        for(Plan plan: plans){
-            messageBuilder.append("ID: ")
-                    .append(plan.getId())
-                    .append("-")
-                    .append(plan.getDescription())
-            .append("\n");
-        }
-        SendMessage sendMessage = SendMessage.builder()
-                .chatId(chatId)
-                .text(messageBuilder.toString())
-                .build();
-        try{
+            if (plans.isEmpty() || plans == null) {
+                SendMessage nothingMessage = new SendMessage(
+                        commonInfo.getChatId().toString(),
+                        "У вас пока нет запланированных дел ✅"
+                );
+                telegramClient.execute(nothingMessage);
+                return;
+            }
+            StringBuilder messageBuilder = new StringBuilder();
+            for (Plan plan : plans) {
+                messageBuilder.append("ID: ")
+                        .append(plan.getId())
+                        .append("-")
+                        .append(plan.getDescription())
+                        .append("\n");
+            }
+            SendMessage sendMessage = SendMessage.builder()
+                    .chatId(chatId)
+                    .text(messageBuilder.toString())
+                    .build();
+
             telegramClient.execute(sendMessage);
-        } catch (TelegramApiException e){
+        } catch (TelegramApiException e) {
             throw new RuntimeException();
         }
     }
 }
+

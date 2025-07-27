@@ -19,7 +19,7 @@ public class Plan {
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     User user;
 
-    public Plan(String description, User user){
+    public Plan(String description, User user) {
         this.title = description.substring(0, Math.min(description.length(), 50));
         this.description = description;
         this.user = user;

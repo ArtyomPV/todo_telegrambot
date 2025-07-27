@@ -5,7 +5,7 @@ import ru.prusov.to_do_telegrambot.common.CommonInfo;
 
 public interface Command {
     UserCommand command();
-    
+
     @Async
     void execute(CommonInfo commonInfo);
 }

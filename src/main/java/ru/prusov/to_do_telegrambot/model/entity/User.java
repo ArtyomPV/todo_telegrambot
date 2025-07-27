@@ -8,9 +8,6 @@ import ru.prusov.to_do_telegrambot.usecase.state.UserState;
 @Data
 @Entity
 @Table(name = "users")
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class User {
     @Id
@@ -20,5 +17,6 @@ public class User {
     long chatId;
     String name;
     @Enumerated(value = EnumType.STRING)
-    UserState userState = UserState.NONE;
+    @Column(nullable = false)
+    UserState state = UserState.NONE;
 }

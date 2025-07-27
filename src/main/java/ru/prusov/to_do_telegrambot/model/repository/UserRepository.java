@@ -15,12 +15,11 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> getUserByChatId(long chatId);
 
-    @Query("select u.state from uUser u where u.chatId = :chatId")
+    @Query("select u.state from User u where u.chatId = :chatId")
     UserState getUserStateByChatId(@Param("chatId") long chatId);
 
     @Modifying
     @Transactional
-    @Query("update User u set u.state = :userState where u.chatId = :chatId")
-    void setUserStateByChatId(@Param("userState") UserState userState,
-                              @Param("chatId") long chatId);
+    @Query("UPDATE User u SET u.state = :userState WHERE u.chatId = :chatId")
+    void setUserStateByChatId(@Param("chatId") long chatId, @Param("userState") UserState userState);
 }

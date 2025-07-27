@@ -15,8 +15,8 @@ import ru.prusov.to_do_telegrambot.common.CommonInfo;
 @Component
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class NoneState implements State{
-    TelegramClient telegramClient;
+public class NoneState implements State {
+    final TelegramClient telegramClient;
 
     @Override
     public UserState state() {
@@ -30,7 +30,7 @@ public class NoneState implements State{
                 .chatId(commonInfo.getChatId())
                 .text("Не понимаю тебя!")
                 .build();
-        try{
+        try {
             telegramClient.execute(sendMessage);
         } catch (TelegramApiException e) {
             throw new RuntimeException(e);

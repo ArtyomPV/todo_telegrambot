@@ -14,9 +14,10 @@ import ru.prusov.to_do_telegrambot.usecase.state.UserState;
 @Component
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AddCommand implements Command{
-    TelegramClient telegramClient;
-    UserStateService userStateService;
+public class AddCommand implements Command {
+    final TelegramClient telegramClient;
+    final UserStateService userStateService;
+
     @Override
     public UserCommand command() {
         return UserCommand.ADD;
@@ -29,10 +30,10 @@ public class AddCommand implements Command{
                 .chatId(chatId)
                 .text("Запланируй дело")
                 .build();
-        try{
+        try {
             telegramClient.execute(msg);
             userStateService.setUserState(chatId, UserState.WAITING_PLAN);
-        } catch (TelegramApiException e){
+        } catch (TelegramApiException e) {
             throw new RuntimeException();
         }
     }

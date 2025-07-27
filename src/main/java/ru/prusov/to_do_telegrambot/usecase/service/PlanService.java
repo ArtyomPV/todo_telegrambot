@@ -13,6 +13,7 @@ import ru.prusov.to_do_telegrambot.model.entity.User;
 import ru.prusov.to_do_telegrambot.model.repository.PlanRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -21,9 +22,10 @@ public class PlanService {
     final PlanRepository planRepository;
     final UserService userService;
 
+
     @Transactional
-    public long savePlan(CommonInfo commonInfo){
-        if(commonInfo.getMessageText()==null || commonInfo.getMessageText().isEmpty()){
+    public long savePlan(CommonInfo commonInfo) {
+        if (commonInfo.getMessageText() == null || commonInfo.getMessageText().isEmpty()) {
             throw new RuntimeException("Message text is null or empty");
         }
         User user = userService.findOrCreateUser(commonInfo.getChatId(), commonInfo.getUserFormTelegram().getUserName());
@@ -32,7 +34,19 @@ public class PlanService {
     }
 
     @Transactional(readOnly = true)
-    public List<Plan> getPlans(Long chatId){
+    public List<Plan> getPlans(Long chatId) {
         return planRepository.findByUserChatId(chatId);
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<Plan> getPlanByID(long id) {
+        return planRepository.findById(id);
+    }
+
+    @Transactional
+    public void removePlan(long id) {
+        Optional<Plan> plan = planRepository.findById(id);
+        System.out.printf("Founded plan %s\n", plan.get());
+        planRepository.delete(plan.get());
     }
 }
