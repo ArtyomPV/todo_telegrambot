@@ -16,6 +16,8 @@ public class Plan {
     @Column(length = 50)
     String title;
     String description;
+    @Enumerated(EnumType.STRING)
+    Status status;
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     User user;
 
@@ -23,5 +25,6 @@ public class Plan {
         this.title = description.substring(0, Math.min(description.length(), 50));
         this.description = description;
         this.user = user;
+        this.status = Status.NEED_TODO;
     }
 }

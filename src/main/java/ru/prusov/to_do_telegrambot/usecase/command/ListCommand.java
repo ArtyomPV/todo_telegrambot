@@ -43,6 +43,8 @@ public class ListCommand implements Command {
                         .append(plan.getId())
                         .append("-")
                         .append(plan.getDescription())
+                        .append(" status: ")
+                        .append(plan.getStatus())
                         .append("\n");
             }
             SendMessage sendMessage = SendMessage.builder()
