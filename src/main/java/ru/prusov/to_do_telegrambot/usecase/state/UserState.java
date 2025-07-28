@@ -5,5 +5,6 @@ public enum UserState {
     NONE,
     WAITING_PLAN,
     REMOVING_PLAN,
+    VIEW_PLAN,
     DONE_PLAN
 }

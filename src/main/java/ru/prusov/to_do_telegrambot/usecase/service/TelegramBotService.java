@@ -51,6 +51,7 @@ public class TelegramBotService implements SpringLongPollingBot, LongPollingSing
         } else if (update.hasCallbackQuery()) {
             CallbackQuery callbackQuery = update.getCallbackQuery();
             String data = callbackQuery.getData();
+            System.out.println(data);
             CommonInfo commonInfo = getCommonInfo(callbackQuery);
             handleCommand(data, commonInfo);
         }
