@@ -23,7 +23,6 @@ public class ViewPlanState implements State {
     final TelegramClient client;
     final PlanService planService;
     final UserService userService;
-    final KeyboardFactory keyboardFactory;
 
     @Override
     public UserState state() {
@@ -46,7 +45,7 @@ public class ViewPlanState implements State {
         SendMessage sendMessage = SendMessage.builder()
                 .chatId(chatId)
                 .text(sb.toString())
-                .replyMarkup(keyboardFactory.getInlineKeyboard(
+                .replyMarkup(KeyboardFactory.getInlineKeyboard(
                         List.of("Назад"),
                         List.of(1),
                         List.of(LIST_BACK)

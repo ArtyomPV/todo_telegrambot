@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import org.telegram.telegrambots.meta.api.objects.User;
+import org.telegram.telegrambots.meta.api.objects.inlinequery.InlineQuery;
 
 @Getter
 @Setter
@@ -15,4 +16,5 @@ public class CommonInfo {
     Long chatId;
     String messageText;
     User userFormTelegram;
+    InlineQuery inlineQuery;
 }
