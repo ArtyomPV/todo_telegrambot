@@ -33,15 +33,15 @@ public class ShowNotStartedPlanInlineCommand implements InlineCommand {
         Long chatId = commonInfo.getChatId();
         List<Plan> plans = planService.getPlans(chatId);
         StringBuilder messageText = new StringBuilder("Список запланированных дел: \n\n");
-            plans.stream()
-                    .filter(plan1 -> plan1.getStatus().equals(NEED_TODO))
-                    .forEach(plan -> {
-                                messageText.append("ID-").append(plan.getId())
-                                        .append("-").append(plan.getTitle())
-                                        .append("\t").append(plan.getStatus())
-                                        .append("\n");
-                            }
-                    );
+        plans.stream()
+                .filter(plan1 -> plan1.getStatus().equals(NEED_TODO))
+                .forEach(plan -> {
+                            messageText.append("ID-").append(plan.getId())
+                                    .append("-").append(plan.getTitle())
+                                    .append("\t").append(plan.getStatus())
+                                    .append("\n");
+                        }
+                );
 
         InputTextMessageContent content = new InputTextMessageContent(messageText.toString());
         InlineQueryResultArticle result = InlineQueryResultArticle.builder()

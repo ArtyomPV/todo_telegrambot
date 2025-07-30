@@ -13,10 +13,11 @@ import java.util.Optional;
 public class InlineCommandRouter {
     private Map<UserInlineCommand, InlineCommand> handlerMap = new EnumMap<>(UserInlineCommand.class);
 
-    public InlineCommandRouter(List<InlineCommand> handlers){
-        handlers.forEach(h->handlerMap.put(h.inlineCommand(), h));
+    public InlineCommandRouter(List<InlineCommand> handlers) {
+        handlers.forEach(h -> handlerMap.put(h.inlineCommand(), h));
     }
-    public Optional<InlineCommand> getHandler(UserInlineCommand userCommand){
+
+    public Optional<InlineCommand> getHandler(UserInlineCommand userCommand) {
         return Optional.ofNullable(handlerMap.get(userCommand));
 
     }

@@ -23,7 +23,6 @@ import ru.prusov.to_do_telegrambot.usecase.routers.CommandRouter;
 import ru.prusov.to_do_telegrambot.usecase.routers.StateRouter;
 import ru.prusov.to_do_telegrambot.usecase.state.UserState;
 
-import java.util.Optional;
 
 @Slf4j
 @Component
@@ -39,10 +38,10 @@ public class TelegramBotService implements SpringLongPollingBot, LongPollingSing
 
     @Override
     public void consume(Update update) {
-        if(update.hasInlineQuery()){
+        if (update.hasInlineQuery()) {
             InlineQuery inlineQuery = update.getInlineQuery();
             CommonInfo commonInfo = getCommonInfo(inlineQuery);
-           handleInLineQuery(commonInfo);
+            handleInLineQuery(commonInfo);
             return;
         }
         if (update.hasMessage() && update.getMessage().hasText()) {
@@ -109,7 +108,7 @@ public class TelegramBotService implements SpringLongPollingBot, LongPollingSing
                 .build();
     }
 
-    private CommonInfo getCommonInfo(InlineQuery inlineQuery){
+    private CommonInfo getCommonInfo(InlineQuery inlineQuery) {
         return CommonInfo.builder()
                 .userFormTelegram(inlineQuery.getFrom())
                 .chatId(inlineQuery.getFrom().getId())

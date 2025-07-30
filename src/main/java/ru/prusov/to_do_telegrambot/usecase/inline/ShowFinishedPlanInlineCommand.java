@@ -2,7 +2,6 @@ package ru.prusov.to_do_telegrambot.usecase.inline;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
 import org.telegram.telegrambots.meta.api.methods.AnswerInlineQuery;
 import org.telegram.telegrambots.meta.api.objects.inlinequery.inputmessagecontent.InputTextMessageContent;
 import org.telegram.telegrambots.meta.api.objects.inlinequery.result.InlineQueryResultArticle;
@@ -21,6 +20,7 @@ import java.util.UUID;
 public class ShowFinishedPlanInlineCommand implements InlineCommand {
     private final TelegramClient client;
     private final PlanService planService;
+
     @Override
     public UserInlineCommand inlineCommand() {
         return UserInlineCommand.SHOW_FINISHED_PLAN;
@@ -53,7 +53,7 @@ public class ShowFinishedPlanInlineCommand implements InlineCommand {
                 .cacheTime(3)
                 .build();
 
-        try{
+        try {
             client.execute(answer);
         } catch (TelegramApiException e) {
             throw new RuntimeException(e);

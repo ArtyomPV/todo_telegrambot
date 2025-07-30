@@ -6,7 +6,6 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
 import ru.prusov.to_do_telegrambot.common.CommonInfo;
-import ru.prusov.to_do_telegrambot.usecase.service.UserService;
 import ru.prusov.to_do_telegrambot.usecase.service.UserStateService;
 import ru.prusov.to_do_telegrambot.usecase.state.UserState;
 
