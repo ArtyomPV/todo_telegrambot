@@ -12,13 +12,18 @@ import org.telegram.telegrambots.longpolling.util.LongPollingSingleThreadUpdateC
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.inlinequery.InlineQuery;
 import org.telegram.telegrambots.meta.api.objects.message.Message;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
 import ru.prusov.to_do_telegrambot.common.CommonInfo;
 import ru.prusov.to_do_telegrambot.usecase.command.UserCommand;
+import ru.prusov.to_do_telegrambot.usecase.inline.UserInlineCommand;
+import ru.prusov.to_do_telegrambot.usecase.routers.InlineCommandRouter;
 import ru.prusov.to_do_telegrambot.usecase.routers.CommandRouter;
 import ru.prusov.to_do_telegrambot.usecase.routers.StateRouter;
 import ru.prusov.to_do_telegrambot.usecase.state.UserState;
+
+import java.util.Optional;
 
 @Slf4j
 @Component
@@ -29,10 +34,17 @@ public class TelegramBotService implements SpringLongPollingBot, LongPollingSing
     private final UserStateService userStateService;
     private final CommandRouter commandRouter;
     private final StateRouter stateRouter;
+    private final InlineCommandRouter inlineCommandRouterRouter;
 
 
     @Override
     public void consume(Update update) {
+        if(update.hasInlineQuery()){
+            InlineQuery inlineQuery = update.getInlineQuery();
+            CommonInfo commonInfo = getCommonInfo(inlineQuery);
+           handleInLineQuery(commonInfo);
+            return;
+        }
         if (update.hasMessage() && update.getMessage().hasText()) {
             Message message = update.getMessage();
             CommonInfo commonInfo = getCommonInfo(message);
@@ -56,6 +68,12 @@ public class TelegramBotService implements SpringLongPollingBot, LongPollingSing
             handleCommand(data, commonInfo);
         }
 
+    }
+
+    private void handleInLineQuery(CommonInfo commonInfo) {
+        UserInlineCommand userInlineCommand = UserInlineCommand.fromString(commonInfo.getMessageText());
+        inlineCommandRouterRouter.getHandler(userInlineCommand)
+                .ifPresent(handler -> handler.execute(commonInfo));
     }
 
     private void handleCommand(String lastUserMessage, CommonInfo commonInfo) {
@@ -89,6 +107,17 @@ public class TelegramBotService implements SpringLongPollingBot, LongPollingSing
                 .userFormTelegram(callbackQuery.getFrom())
                 .chatId(callbackQuery.getMessage().getChatId())
                 .build();
+    }
+
+    private CommonInfo getCommonInfo(InlineQuery inlineQuery){
+        return CommonInfo.builder()
+                .userFormTelegram(inlineQuery.getFrom())
+                .chatId(inlineQuery.getFrom().getId())
+                .messageText(inlineQuery.getQuery())
+                .inlineQuery(inlineQuery)
+                .build();
+
+
     }
 
     @Override
