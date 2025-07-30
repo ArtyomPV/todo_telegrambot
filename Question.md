@@ -1,5 +1,18 @@
 1. при выполнении команды **/add** необходимо ввести описание дела, при использовании символа # в описании.
 Когда хотим поменять статус на другой, например задача выполнена, вводим команду -> вводим ID задачи и программа выкидывает исключение
 ```
-Exception in thread "pool-2-thread-1" java.lang.RuntimeException: Error executing org.telegram.telegrambots.meta.api.methods.send.SendMessage query: [400] Bad Request: can't parse entities: Character '#' is reserved and must be escaped with the preceding '\'
+Exception in thread "pool-2-thread-1" java.lang.RuntimeException: 
+Error executing org.telegram.telegrambots.meta.api.methods.send.SendMessage query: 
+[400] Bad Request: can't parse entities: Character '#' is reserved and must be escaped with the preceding '\'
 ```
+Как и где нужно проводить валидацию ответа от пользователя?
+Пользователь может ввести все что угодно, вместо цифры ID
+
+2. Для CallbackQuery, также создаются отдельные классы и в этих классах возможна такая же логика, как и например в классе *Command.
+3. Есть ситуация: выводим список всех дел, предлагаем пользователю выбрать какое-либо дело для его просмотра по ID
+(по /list выводится plan.title), переходим на экран с отдельной задачей и имеет три инлайн-кнопки : 
+   * редактировать
+   * удалить
+   * изменить статус 
+     * назад
+Как можно работать по коллбэкам с выбранной задачей и нужно создавать класс отдельный класс RemoveCallback.   

@@ -1,5 +1,6 @@
 package ru.prusov.to_do_telegrambot.factory;
 
+import lombok.experimental.UtilityClass;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
@@ -8,9 +9,10 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
+
+@UtilityClass
 public class KeyboardFactory {
-    public InlineKeyboardMarkup getInlineKeyboard(List<String> text,
+    public static InlineKeyboardMarkup getInlineKeyboard(List<String> text,
                                                   List<Integer> configuration,
                                                   List<String> data) {
         List<InlineKeyboardRow> keyboard = new ArrayList<>();

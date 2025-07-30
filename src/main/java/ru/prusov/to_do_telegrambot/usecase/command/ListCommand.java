@@ -22,7 +22,7 @@ public class ListCommand implements Command {
     final TelegramClient telegramClient;
     final PlanService planService;
     final UserService userService;
-    final KeyboardFactory keyboardFactory;
+//    final KeyboardFactory keyboardFactory;
 
     @Override
     public UserCommand command() {
@@ -60,7 +60,7 @@ public class ListCommand implements Command {
             SendMessage sendMessage = SendMessage.builder()
                     .chatId(chatId)
                     .text(messageBuilder.toString())
-                    .replyMarkup(keyboardFactory.getInlineKeyboard(
+                    .replyMarkup(KeyboardFactory.getInlineKeyboard(
                             List.of("Удалить задачу", "Отметить задачу", "Назад"),
                             List.of(2, 1),
                             List.of(REMOVE_PLAN, CHANGE_PLAN_STATUS, START_BACK)
