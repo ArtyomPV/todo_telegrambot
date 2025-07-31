@@ -12,11 +12,13 @@ import org.telegram.telegrambots.longpolling.util.LongPollingSingleThreadUpdateC
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.Video;
 import org.telegram.telegrambots.meta.api.objects.inlinequery.InlineQuery;
 import org.telegram.telegrambots.meta.api.objects.message.Message;
 import org.telegram.telegrambots.meta.api.objects.photo.PhotoSize;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
 import ru.prusov.to_do_telegrambot.common.CommonInfo;
+import ru.prusov.to_do_telegrambot.model.entity.VideoItem;
 import ru.prusov.to_do_telegrambot.usecase.command.UserCommand;
 import ru.prusov.to_do_telegrambot.usecase.inline.UserInlineCommand;
 import ru.prusov.to_do_telegrambot.usecase.routers.InlineCommandRouter;
@@ -38,6 +40,7 @@ public class TelegramBotService implements SpringLongPollingBot, LongPollingSing
     private final StateRouter stateRouter;
     private final InlineCommandRouter inlineCommandRouterRouter;
     private final PhotoService photoService;
+    private final VideoItemService videoItemService;
 
 
     @Override
@@ -52,7 +55,7 @@ public class TelegramBotService implements SpringLongPollingBot, LongPollingSing
         if (update.hasMessage()) {
             Message message = update.getMessage();
             CommonInfo commonInfo = getCommonInfo(message);
-            if(message.hasText()) {
+            if (message.hasText()) {
                 String lastUserMessage = message.getText();
 
                 if (lastUserMessage.startsWith("/")) {
@@ -71,7 +74,9 @@ public class TelegramBotService implements SpringLongPollingBot, LongPollingSing
                 // Берем самое большое фото
                 PhotoSize photo = photos.get(photos.size() - 1);
                 photoService.savePhotoFromMessage(photo, commonInfo.getChatId());
-
+            } else if (message.hasVideo()) {
+                Video video = message.getVideo();
+                videoItemService.saveVideoItemFromMessage(video, message.getChatId());
 
             }
         } else if (update.hasCallbackQuery()) {
@@ -86,50 +91,33 @@ public class TelegramBotService implements SpringLongPollingBot, LongPollingSing
 
     private void handleInLineQuery(CommonInfo commonInfo) {
         UserInlineCommand userInlineCommand = UserInlineCommand.fromString(commonInfo.getMessageText());
-        inlineCommandRouterRouter.getHandler(userInlineCommand)
-                .ifPresent(handler -> handler.execute(commonInfo));
+        inlineCommandRouterRouter.getHandler(userInlineCommand).ifPresent(handler -> handler.execute(commonInfo));
     }
 
     private void handleCommand(String lastUserMessage, CommonInfo commonInfo) {
         UserCommand command = UserCommand.fromString(lastUserMessage);
         commandRouter.getHandler(command).ifPresentOrElse(handler -> {
-                    userStateService.clearUserState(commonInfo.getChatId());
-                    handler.execute(commonInfo);
-                }
-                , () -> unknownActionHandler(commonInfo.getChatId()));
+            userStateService.clearUserState(commonInfo.getChatId());
+            handler.execute(commonInfo);
+        }, () -> unknownActionHandler(commonInfo.getChatId()));
     }
 
     @SneakyThrows
     private void unknownActionHandler(Long chatId) {
-        SendMessage sendMessage = SendMessage.builder()
-                .chatId(chatId)
-                .text("Я вас не понял. Начните с /start")
-                .build();
+        SendMessage sendMessage = SendMessage.builder().chatId(chatId).text("Я вас не понял. Начните с /start").build();
         telegramClient.execute(sendMessage);
     }
 
     private CommonInfo getCommonInfo(Message message) {
-        return CommonInfo.builder()
-                .chatId(message.getChatId())
-                .messageText(message.getText())
-                .userFormTelegram(message.getFrom())
-                .build();
+        return CommonInfo.builder().chatId(message.getChatId()).messageText(message.getText()).userFormTelegram(message.getFrom()).build();
     }
 
     private CommonInfo getCommonInfo(CallbackQuery callbackQuery) {
-        return CommonInfo.builder()
-                .userFormTelegram(callbackQuery.getFrom())
-                .chatId(callbackQuery.getMessage().getChatId())
-                .build();
+        return CommonInfo.builder().userFormTelegram(callbackQuery.getFrom()).chatId(callbackQuery.getMessage().getChatId()).build();
     }
 
     private CommonInfo getCommonInfo(InlineQuery inlineQuery) {
-        return CommonInfo.builder()
-                .userFormTelegram(inlineQuery.getFrom())
-                .chatId(inlineQuery.getFrom().getId())
-                .messageText(inlineQuery.getQuery())
-                .inlineQuery(inlineQuery)
-                .build();
+        return CommonInfo.builder().userFormTelegram(inlineQuery.getFrom()).chatId(inlineQuery.getFrom().getId()).messageText(inlineQuery.getQuery()).inlineQuery(inlineQuery).build();
 
 
     }
@@ -145,8 +133,7 @@ public class TelegramBotService implements SpringLongPollingBot, LongPollingSing
     }
 
     @AfterBotRegistration
-    public void
-    afterRegistration(BotSession botSession) {
+    public void afterRegistration(BotSession botSession) {
         log.info("Registered bot running state is: {}", botSession.isRunning());
     }
 }
