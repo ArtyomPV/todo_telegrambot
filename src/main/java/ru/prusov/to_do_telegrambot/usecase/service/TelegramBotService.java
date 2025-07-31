@@ -14,6 +14,7 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.inlinequery.InlineQuery;
 import org.telegram.telegrambots.meta.api.objects.message.Message;
+import org.telegram.telegrambots.meta.api.objects.photo.PhotoSize;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
 import ru.prusov.to_do_telegrambot.common.CommonInfo;
 import ru.prusov.to_do_telegrambot.usecase.command.UserCommand;
@@ -22,6 +23,8 @@ import ru.prusov.to_do_telegrambot.usecase.routers.InlineCommandRouter;
 import ru.prusov.to_do_telegrambot.usecase.routers.CommandRouter;
 import ru.prusov.to_do_telegrambot.usecase.routers.StateRouter;
 import ru.prusov.to_do_telegrambot.usecase.state.UserState;
+
+import java.util.List;
 
 
 @Slf4j
@@ -34,31 +37,43 @@ public class TelegramBotService implements SpringLongPollingBot, LongPollingSing
     private final CommandRouter commandRouter;
     private final StateRouter stateRouter;
     private final InlineCommandRouter inlineCommandRouterRouter;
+    private final PhotoService photoService;
 
 
     @Override
     public void consume(Update update) {
+
         if (update.hasInlineQuery()) {
             InlineQuery inlineQuery = update.getInlineQuery();
             CommonInfo commonInfo = getCommonInfo(inlineQuery);
             handleInLineQuery(commonInfo);
             return;
         }
-        if (update.hasMessage() && update.getMessage().hasText()) {
+        if (update.hasMessage()) {
             Message message = update.getMessage();
             CommonInfo commonInfo = getCommonInfo(message);
-            String lastUserMessage = message.getText();
+            if(message.hasText()) {
+                String lastUserMessage = message.getText();
 
-            if (lastUserMessage.startsWith("/")) {
-                handleCommand(lastUserMessage, commonInfo);
-                return;
+                if (lastUserMessage.startsWith("/")) {
+                    handleCommand(lastUserMessage, commonInfo);
+                    return;
+                }
+
+                long chatId = update.getMessage().getChatId();
+                UserState userState = userStateService.getUserState(chatId);
+                stateRouter.getHandler(userState).ifPresentOrElse(handler -> {
+                    handler.handleState(commonInfo);
+                }, () -> unknownActionHandler(chatId));
+            } else if (message.hasPhoto()) {
+                // Получаем список фото разных размеров
+                List<PhotoSize> photos = message.getPhoto();
+                // Берем самое большое фото
+                PhotoSize photo = photos.get(photos.size() - 1);
+                photoService.savePhotoFromMessage(photo, commonInfo.getChatId());
+
+
             }
-
-            long chatId = update.getMessage().getChatId();
-            UserState userState = userStateService.getUserState(chatId);
-            stateRouter.getHandler(userState).ifPresentOrElse(handler -> {
-                handler.handleState(commonInfo);
-            }, () -> unknownActionHandler(chatId));
         } else if (update.hasCallbackQuery()) {
             CallbackQuery callbackQuery = update.getCallbackQuery();
             String data = callbackQuery.getData();
@@ -130,7 +145,8 @@ public class TelegramBotService implements SpringLongPollingBot, LongPollingSing
     }
 
     @AfterBotRegistration
-    public void afterRegistration(BotSession botSession) {
+    public void
+    afterRegistration(BotSession botSession) {
         log.info("Registered bot running state is: {}", botSession.isRunning());
     }
 }
