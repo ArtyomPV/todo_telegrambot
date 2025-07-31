@@ -25,8 +25,7 @@ public class TelegramCommandMenu {
                     new BotCommand("start", "Приветствие"),
                     new BotCommand("add", "Записать свои дела"),
                     new BotCommand("list", "Посмотреть свои дела"),
-                    new BotCommand("remove", "Удалить дело"),
-                    new BotCommand("done", "Установить статус выполнено")
+                    new BotCommand("photo", "Показать случайное фото")
             );
             sender.execute(new SetMyCommands(commands, BotCommandScopeDefault.builder().build(), null));
         } catch (Exception e) {

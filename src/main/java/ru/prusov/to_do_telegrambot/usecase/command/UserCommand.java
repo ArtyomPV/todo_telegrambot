@@ -10,7 +10,8 @@ public enum UserCommand {
     START("/start"),
     LIST("/list"),
     REMOVE("/remove"),
-    DONE("/done");
+    DONE("/done"),
+    PHOTO("/photo");
 
     private final String command;
 
