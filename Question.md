@@ -16,3 +16,6 @@ Error executing org.telegram.telegrambots.meta.api.methods.send.SendMessage quer
    * изменить статус 
      * назад
 Как можно работать по коллбэкам с выбранной задачей и нужно создавать класс отдельный класс RemoveCallback.   
+
+
+BOT_TOKEN=7350864573:AAFRpqr2MsIPmeuJiPT6BXb06fE317McryA;BOT_USERNAME=java test bot
